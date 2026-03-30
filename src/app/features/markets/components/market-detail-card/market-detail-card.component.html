@@ -1,0 +1,66 @@
+<article class="detail-card">
+  <header class="detail-card__header">
+    <div>
+      <p class="detail-card__symbol">{{ market.symbol }}</p>
+      <h2>{{ market.name }}</h2>
+      <p class="detail-card__summary">
+        This screen reads the selected symbol from the store and renders a view
+        model built by selectors.
+      </p>
+    </div>
+    <button type="button" class="detail-card__favorite" (click)="toggleFavorite.emit(market.symbol)">
+      {{ market.isFavorite ? 'Saved to watchlist' : 'Save to watchlist' }}
+    </button>
+  </header>
+
+  <div class="detail-card__hero">
+    <div>
+      <span class="detail-card__label">Last price</span>
+      <strong>
+        {{ market.last ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}
+      </strong>
+    </div>
+    <div
+      class="detail-card__change"
+      [class.detail-card__change--negative]="(market.change ?? 0) < 0"
+    >
+      <span>24h change</span>
+      <strong>{{ market.changePctFraction ?? 0 | percent : '1.2-2' }}</strong>
+    </div>
+  </div>
+
+  <dl class="detail-card__stats">
+    <div>
+      <dt>Bid</dt>
+      <dd>{{ market.bid ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
+    </div>
+    <div>
+      <dt>Ask</dt>
+      <dd>{{ market.ask ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
+    </div>
+    <div>
+      <dt>Spread</dt>
+      <dd>{{ market.spread ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
+    </div>
+    <div>
+      <dt>VWAP</dt>
+      <dd>{{ market.vwap ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
+    </div>
+    <div>
+      <dt>24h high</dt>
+      <dd>{{ market.high ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
+    </div>
+    <div>
+      <dt>24h low</dt>
+      <dd>{{ market.low ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
+    </div>
+    <div>
+      <dt>24h volume</dt>
+      <dd>{{ market.volume ?? 0 | number : '1.0-0' }}</dd>
+    </div>
+    <div>
+      <dt>Last update</dt>
+      <dd>{{ market.updatedAt | date : 'medium' }}</dd>
+    </div>
+  </dl>
+</article>

@@ -1,0 +1,62 @@
+@if (vm$ | async; as vm) {
+  <section class="page">
+    <header class="page__header">
+      <div>
+        <p class="page__eyebrow">Dashboard</p>
+        <h2>Follow the market state as it changes</h2>
+        <p class="page__summary">
+          The snapshot comes from REST and the updates come from a Kraken WebSocket.
+          Reducers store both in the same entity map.
+        </p>
+      </div>
+
+      <div class="page__actions">
+        <app-connection-status-badge
+          [status]="vm.connectionStatus"
+          [reconnectInMs]="vm.reconnectInMs"
+        />
+        <button type="button" class="page__reload" (click)="reloadSnapshot()">
+          Reload snapshot
+        </button>
+      </div>
+    </header>
+
+    <section class="stats-grid" aria-label="State summary">
+      <article>
+        <span>Tracked markets</span>
+        <strong>{{ vm.markets.length }}</strong>
+      </article>
+      <article>
+        <span>Watchlist size</span>
+        <strong>{{ vm.favoriteMarkets.length }}</strong>
+      </article>
+      <article>
+        <span>Last store update</span>
+        <strong>{{ vm.lastUpdated | date : 'mediumTime' }}</strong>
+      </article>
+    </section>
+
+    @if (vm.error) {
+      <section class="page__notice">
+        <p>{{ vm.error }}</p>
+      </section>
+    }
+
+    <app-market-list
+      title="All tracked markets"
+      subtitle="Each card is driven by selectors built from the markets feature state."
+      [markets]="vm.markets"
+      (openDetail)="openDetail($event)"
+      (toggleFavorite)="toggleWatchlist($event)"
+    />
+
+    <app-market-list
+      title="Watchlist"
+      subtitle="This slice lives in a separate feature and persists to localStorage."
+      emptyMessage="Save a market to see how a second feature slice reacts."
+      [markets]="vm.favoriteMarkets"
+      (openDetail)="openDetail($event)"
+      (toggleFavorite)="toggleWatchlist($event)"
+    />
+  </section>
+}
