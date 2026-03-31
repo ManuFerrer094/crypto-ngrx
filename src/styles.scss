@@ -33,6 +33,52 @@ body {
     linear-gradient(180deg, #fcfdff 0%, #f4f6f8 40%, #edf1f5 100%);
 }
 
+/* Global override: render 24h change column as plain colored text (no badge/chip) */
+/* Targets mat table column class generated from column key: changePctFraction */
+.mat-column-changePctFraction .mf-table__badge,
+.mat-column-changePctFraction .mf-table__badge * {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  box-shadow: none !important;
+  display: inline !important;
+}
+
+.mat-column-changePctFraction .mf-table__badge--success {
+  color: #15803d !important;
+}
+.mat-column-changePctFraction .mf-table__badge--error {
+  color: #dc2626 !important;
+}
+.mat-column-changePctFraction .mf-table__badge--neutral {
+  color: #6b7280 !important;
+}
+
+/* Fallback by column position if mat-column-... class doesn't match (5th column) */
+table.mf-table__table td:nth-child(5) .mf-table__badge,
+table.mf-table__table th:nth-child(5) .mf-table__badge {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  box-shadow: none !important;
+  display: inline !important;
+}
+
+table.mf-table__table td:nth-child(5) .mf-table__badge--success,
+table.mf-table__table th:nth-child(5) .mf-table__badge--success {
+  color: #15803d !important;
+}
+table.mf-table__table td:nth-child(5) .mf-table__badge--error,
+table.mf-table__table th:nth-child(5) .mf-table__badge--error {
+  color: #dc2626 !important;
+}
+table.mf-table__table td:nth-child(5) .mf-table__badge--neutral,
+table.mf-table__table th:nth-child(5) .mf-table__badge--neutral {
+  color: #6b7280 !important;
+}
+
 body::before {
   content: '';
   position: fixed;

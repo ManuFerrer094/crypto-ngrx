@@ -5,3 +5,53 @@
 mf-table {
   display: block;
 }
+
+/* Make the 24h change column render as plain colored text instead of a badge */
+.mat-column-changePctFraction .mf-table__badge {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  box-shadow: none !important;
+  display: inline !important;
+  font-weight: 700 !important;
+  font-variant-numeric: tabular-nums !important;
+  color: inherit !important;
+}
+
+.mat-column-changePctFraction .mf-table__badge--success {
+  color: #15803d !important;
+}
+
+.mat-column-changePctFraction .mf-table__badge--error {
+  color: #dc2626 !important;
+}
+
+.mat-column-changePctFraction .mf-table__badge--neutral {
+  color: #6b7280 !important;
+}
+
+/* Fallback when column class name differs (use column position: 5th column) */
+:host mf-table .mf-table__table td:nth-child(5) .mf-table__badge,
+:host mf-table .mf-table__table th:nth-child(5) .mf-table__badge {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  box-shadow: none !important;
+  display: inline !important;
+  font-weight: 700 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+:host mf-table .mf-table__table td:nth-child(5) .mf-table__badge--success {
+  color: #15803d !important;
+}
+
+:host mf-table .mf-table__table td:nth-child(5) .mf-table__badge--error {
+  color: #dc2626 !important;
+}
+
+:host mf-table .mf-table__table td:nth-child(5) .mf-table__badge--neutral {
+  color: #6b7280 !important;
+}

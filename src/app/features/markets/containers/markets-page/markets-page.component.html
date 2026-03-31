@@ -85,31 +85,6 @@
     @if (vm.error) {
       <mf-alert title="Market feed issue" [message]="vm.error" severity="error" />
     }
-
-    <mf-card
-      class="page__filters"
-      title="Board filters"
-      subtitle="Reactive forms powered by ng-comps ControlValueAccessor components."
-      variant="outlined"
-    >
-      <form class="page__filters-form" [formGroup]="filterForm">
-        <mf-input
-          formControlName="query"
-          label="Search markets"
-          placeholder="BTC, ETH, SOL or USD"
-          leadingIcon="search"
-          [fullWidth]="true"
-          ariaLabel="Search markets by symbol or asset"
-        />
-
-        <mf-slide-toggle
-          formControlName="favoritesOnly"
-          label="Show only watchlist markets in the main board"
-          ariaLabel="Show only watchlist markets in the main board"
-        />
-      </form>
-    </mf-card>
-
     <app-market-list
       [title]="vm.primaryTitle"
       [subtitle]="vm.primarySubtitle"

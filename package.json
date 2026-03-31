@@ -27,7 +27,7 @@
     "@ngrx/effects": "^21.1.0",
     "@ngrx/store": "^21.1.0",
     "@ngrx/store-devtools": "^21.1.0",
-    "ng-comps": "^4.0.0",
+    "ng-comps": "^4.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

@@ -53,7 +53,6 @@ export class MarketsPageComponent {
   private readonly snackbar = inject(MfSnackbarService);
 
   readonly filterForm = new FormGroup({
-    query: new FormControl('', { nonNullable: true }),
     favoritesOnly: new FormControl(false, { nonNullable: true }),
   });
 
@@ -65,22 +64,18 @@ export class MarketsPageComponent {
     this.filterForm.valueChanges.pipe(startWith(this.filterForm.getRawValue())),
   ]).pipe(
     map(([vm, filters]) => {
-      const query = (filters.query ?? '').trim();
-      const filteredMarkets = this.filterMarkets(vm.markets, query);
-      const filteredFavoriteMarkets = this.filterMarkets(vm.favoriteMarkets, query);
       const favoritesOnly = filters.favoritesOnly ?? false;
 
       return {
         ...vm,
         filters: {
-          query,
           favoritesOnly,
         },
-        filteredFavoriteMarkets,
-        primaryMarkets: favoritesOnly ? filteredFavoriteMarkets : filteredMarkets,
+        filteredFavoriteMarkets: vm.favoriteMarkets,
+        primaryMarkets: favoritesOnly ? vm.favoriteMarkets : vm.markets,
         primaryTitle: favoritesOnly ? 'Watchlist results' : 'All tracked markets',
         primarySubtitle: favoritesOnly
-          ? 'Your watchlist filtered by the current search query.'
+          ? 'Your watchlist filtered by the current selection.'
           : 'A wider Kraken basket with live price, spread, size and turnover data.',
       };
     }),
@@ -118,19 +113,5 @@ export class MarketsPageComponent {
       ariaLabel: 'About the live market feed',
       restoreFocus: true,
     });
-  }
-
-  private filterMarkets(markets: readonly TickerVm[], query: string): readonly TickerVm[] {
-    if (!query) {
-      return markets;
-    }
-
-    const normalizedQuery = query.toLowerCase();
-
-    return markets.filter((market) =>
-      [market.symbol, market.name, market.baseAsset, market.quoteAsset].some((value) =>
-        value.toLowerCase().includes(normalizedQuery),
-      ),
-    );
   }
 }

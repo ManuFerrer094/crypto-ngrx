@@ -96,10 +96,15 @@ export class MarketListComponent {
     {
       key: 'changePctFraction',
       header: '24h change',
-      type: 'number',
+      type: 'badge',
       align: 'end',
       sortable: true,
       formatter: (value: unknown) => this.formatPercent(value as number | null),
+      badgeTone: (value: unknown) => {
+        const v = value as number | null | undefined;
+        if (v === null || v === undefined) return 'neutral';
+        return v < 0 ? 'error' : v > 0 ? 'success' : 'neutral';
+      },
       sortAccessor: (row: Record<string, unknown>) =>
         this.asMarket(row).changePctFraction ?? Number.NEGATIVE_INFINITY,
     },
