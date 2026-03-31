@@ -16,6 +16,7 @@ export interface TickerQuote {
   high: number;
   last: number;
   low: number;
+  open: number;
   spread: number;
   timestamp: string;
   volume: number;
@@ -50,12 +51,20 @@ export interface TickerVm {
   low: number | null;
   bid: number | null;
   ask: number | null;
+  bidQuantity: number | null;
+  askQuantity: number | null;
   spread: number | null;
+  spreadPct: number | null;
   volume: number | null;
+  volumeNotional: number | null;
   vwap: number | null;
+  open: number | null;
+  midPrice: number | null;
   updatedAt: string | null;
   isFavorite: boolean;
+  pairDecimals: number;
   status: string;
+  statusLabel: string;
 }
 
 export interface MarketsState {

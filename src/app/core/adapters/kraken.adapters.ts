@@ -1,7 +1,4 @@
-import {
-  TRACKED_MARKETS,
-  type TrackedMarketConfig,
-} from '../constants/tracked-markets';
+import { TRACKED_MARKETS, type TrackedMarketConfig } from '../constants/tracked-markets';
 import { type MarketPair, type TickerQuote } from '../models/market.models';
 
 interface KrakenAssetPairPayload {
@@ -19,6 +16,7 @@ interface KrakenTickerPayload {
   p: [string, string];
   l: [string, string];
   h: [string, string];
+  o: string;
 }
 
 export interface KrakenAssetPairsResponse {
@@ -63,6 +61,7 @@ function buildTickerQuote({
   high,
   last,
   low,
+  open,
   timestamp,
   volume,
   vwap,
@@ -76,6 +75,7 @@ function buildTickerQuote({
   high: number;
   last: number;
   low: number;
+  open: number;
   timestamp: string;
   volume: number;
   vwap: number;
@@ -90,6 +90,7 @@ function buildTickerQuote({
     high,
     last,
     low,
+    open,
     spread: ask - bid,
     timestamp,
     volume,
@@ -102,9 +103,7 @@ function findAssetEntry(
   assetPairs: Record<string, KrakenAssetPairPayload>,
 ): [string, KrakenAssetPairPayload] | undefined {
   return Object.entries(assetPairs).find(([, pair]) => {
-    return (
-      pair.altname === config.restSymbol || pair.wsname === config.restWsSymbol
-    );
+    return pair.altname === config.restSymbol || pair.wsname === config.restWsSymbol;
   });
 }
 
@@ -116,25 +115,26 @@ export function adaptMarketSnapshot(
     const assetEntry = findAssetEntry(config, assetPairs.result);
     const tickerEntry = assetEntry ? tickers.result[assetEntry[0]] : undefined;
     const quote = tickerEntry
-      ? buildTickerQuote({
-          ask: Number(tickerEntry.a[0]),
-          askQuantity: Number(tickerEntry.a[1]),
-          bid: Number(tickerEntry.b[0]),
-          bidQuantity: Number(tickerEntry.b[1]),
-          change: Number(tickerEntry.c[0]) - Number(tickerEntry.p[1]),
-          changePct:
-            Number(tickerEntry.p[1]) === 0
-              ? 0
-              : ((Number(tickerEntry.c[0]) - Number(tickerEntry.p[1])) /
-                  Number(tickerEntry.p[1])) *
-                100,
-          high: Number(tickerEntry.h[1]),
-          last: Number(tickerEntry.c[0]),
-          low: Number(tickerEntry.l[1]),
-          timestamp: new Date().toISOString(),
-          volume: Number(tickerEntry.v[1]),
-          vwap: Number(tickerEntry.p[1]),
-        })
+      ? (() => {
+          const last = Number(tickerEntry.c[0]);
+          const open = Number(tickerEntry.o);
+
+          return buildTickerQuote({
+            ask: Number(tickerEntry.a[0]),
+            askQuantity: Number(tickerEntry.a[1]),
+            bid: Number(tickerEntry.b[0]),
+            bidQuantity: Number(tickerEntry.b[1]),
+            change: last - open,
+            changePct: open === 0 ? 0 : ((last - open) / open) * 100,
+            high: Number(tickerEntry.h[1]),
+            last,
+            low: Number(tickerEntry.l[1]),
+            open,
+            timestamp: new Date().toISOString(),
+            volume: Number(tickerEntry.v[1]),
+            vwap: Number(tickerEntry.p[1]),
+          });
+        })()
       : null;
 
     return {
@@ -155,7 +155,7 @@ export function adaptMarketSnapshot(
 
 export function adaptWsTickerMessage(
   message: KrakenWsTickerMessage,
-): TickerQuote & { symbol: string } | null {
+): (TickerQuote & { symbol: string }) | null {
   if (message.channel !== 'ticker' || !message.data?.length) {
     return null;
   }
@@ -173,6 +173,7 @@ export function adaptWsTickerMessage(
       high: ticker.high,
       last: ticker.last,
       low: ticker.low,
+      open: ticker.last - ticker.change,
       timestamp: ticker.timestamp,
       volume: ticker.volume,
       vwap: ticker.vwap,

@@ -45,8 +45,7 @@
   padding: 1rem;
   border: 1px solid rgba(13, 29, 52, 0.08);
   border-radius: 20px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(245, 248, 252, 0.95));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(245, 248, 252, 0.95));
 }
 
 .market-card__top {
@@ -68,6 +67,22 @@
 .market-card h3 {
   margin: 0;
   font-size: 1.15rem;
+}
+
+.market-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
+}
+
+.market-card__meta span {
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(13, 29, 52, 0.06);
+  color: var(--color-text-muted);
+  font-size: 0.76rem;
+  font-weight: 700;
 }
 
 .market-card__favorite,
@@ -97,13 +112,31 @@
   letter-spacing: -0.04em;
 }
 
+.market-card__subprice {
+  margin: 0.35rem 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
 .market-card__change {
+  display: grid;
+  gap: 0.15rem;
   padding: 0.35rem 0.6rem;
   border-radius: 999px;
   background: rgba(32, 157, 103, 0.12);
   color: #0d7a50;
   font-size: 0.82rem;
   font-weight: 700;
+  text-align: right;
+}
+
+.market-card__change strong {
+  font-size: 0.92rem;
+}
+
+.market-card__change span {
+  font-size: 0.76rem;
 }
 
 .market-card__change--negative {

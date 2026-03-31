@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DatePipe, PercentPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -14,7 +14,9 @@ import { MarketListComponent } from '../../components/market-list/market-list.co
   selector: 'app-markets-page',
   imports: [
     AsyncPipe,
+    CurrencyPipe,
     DatePipe,
+    PercentPipe,
     ConnectionStatusBadgeComponent,
     MarketListComponent,
   ],

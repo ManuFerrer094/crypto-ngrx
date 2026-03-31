@@ -3,10 +3,10 @@
     <header class="page__header">
       <div>
         <p class="page__eyebrow">Dashboard</p>
-        <h2>Follow the market state as it changes</h2>
+        <h2>Watch the market pulse move in real time</h2>
         <p class="page__summary">
-          The snapshot comes from REST and the updates come from a Kraken WebSocket.
-          Reducers store both in the same entity map.
+          Kraken seeds the board with a REST snapshot and keeps it fresh through the live ticker
+          stream, so each card stays updated with price, liquidity and 24h activity.
         </p>
       </div>
 
@@ -32,7 +32,36 @@
       </article>
       <article>
         <span>Last store update</span>
-        <strong>{{ vm.lastUpdated | date : 'mediumTime' }}</strong>
+        <strong>{{ vm.lastUpdated | date: 'mediumTime' }}</strong>
+      </article>
+      <article>
+        <span>24h leader</span>
+        @if (vm.leaderMarket; as leader) {
+          <strong>{{ leader.symbol }}</strong>
+          <small>{{ leader.changePctFraction ?? 0 | percent: '1.2-2' }}</small>
+        } @else {
+          <strong>Waiting</strong>
+        }
+      </article>
+      <article>
+        <span>24h laggard</span>
+        @if (vm.laggardMarket; as laggard) {
+          <strong>{{ laggard.symbol }}</strong>
+          <small>{{ laggard.changePctFraction ?? 0 | percent: '1.2-2' }}</small>
+        } @else {
+          <strong>Waiting</strong>
+        }
+      </article>
+      <article>
+        <span>Top 24h turnover</span>
+        @if (vm.mostActiveMarket; as active) {
+          <strong>{{ active.symbol }}</strong>
+          <small>
+            {{ active.volumeNotional ?? 0 | currency: active.quoteAsset : 'symbol' : '1.0-0' }}
+          </small>
+        } @else {
+          <strong>Waiting</strong>
+        }
       </article>
     </section>
 
@@ -44,7 +73,7 @@
 
     <app-market-list
       title="All tracked markets"
-      subtitle="Each card is driven by selectors built from the markets feature state."
+      subtitle="A wider Kraken basket with live price, spread, size and turnover data."
       [markets]="vm.markets"
       (openDetail)="openDetail($event)"
       (toggleFavorite)="toggleWatchlist($event)"
@@ -52,8 +81,8 @@
 
     <app-market-list
       title="Watchlist"
-      subtitle="This slice lives in a separate feature and persists to localStorage."
-      emptyMessage="Save a market to see how a second feature slice reacts."
+      subtitle="Keep your highest-conviction pairs close while the feed keeps updating."
+      emptyMessage="Save a market to pin it here and monitor it separately."
       [markets]="vm.favoriteMarkets"
       (openDetail)="openDetail($event)"
       (toggleFavorite)="toggleWatchlist($event)"

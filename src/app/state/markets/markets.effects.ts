@@ -3,6 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { catchError, filter, map, of, switchMap, timer, withLatestFrom } from 'rxjs';
 
+import { TRACKED_MARKET_WS_SYMBOLS } from '../../core/constants/tracked-markets';
 import { KrakenRestService } from '../../core/services/kraken-rest.service';
 import { KrakenWebsocketService } from '../../core/services/kraken-websocket.service';
 import { AppActions } from '../app.actions';
@@ -59,39 +60,37 @@ export class MarketsEffects {
     this.actions$.pipe(
       ofType(MarketsActions.connectTickerStream),
       switchMap(({ attempt }) =>
-        this.krakenWebsocketService
-          .connect(['BTC/USD', 'ETH/USD', 'SOL/USD'])
-          .pipe(
-            map((event) => {
-              switch (event.type) {
-                case 'connected':
-                  return MarketsActions.streamConnected();
-                case 'disconnected':
-                  return MarketsActions.streamDisconnected({
-                    reason: event.reason,
-                  });
-                case 'error':
-                  return MarketsActions.streamError({
-                    error: event.error,
-                  });
-                case 'ticker':
-                  return MarketsActions.tickerMessageReceived({
-                    symbol: event.symbol,
-                    quote: event.quote,
-                  });
-              }
-            }),
-            catchError(() =>
-              of(
-                MarketsActions.streamError({
-                  error:
-                    attempt > 0
-                      ? 'The live stream failed again while reconnecting.'
-                      : 'The live stream could not be established.',
-                }),
-              ),
+        this.krakenWebsocketService.connect(TRACKED_MARKET_WS_SYMBOLS).pipe(
+          map((event) => {
+            switch (event.type) {
+              case 'connected':
+                return MarketsActions.streamConnected();
+              case 'disconnected':
+                return MarketsActions.streamDisconnected({
+                  reason: event.reason,
+                });
+              case 'error':
+                return MarketsActions.streamError({
+                  error: event.error,
+                });
+              case 'ticker':
+                return MarketsActions.tickerMessageReceived({
+                  symbol: event.symbol,
+                  quote: event.quote,
+                });
+            }
+          }),
+          catchError(() =>
+            of(
+              MarketsActions.streamError({
+                error:
+                  attempt > 0
+                    ? 'The live stream failed again while reconnecting.'
+                    : 'The live stream could not be established.',
+              }),
             ),
           ),
+        ),
       ),
     ),
   );
@@ -115,9 +114,7 @@ export class MarketsEffects {
     this.actions$.pipe(
       ofType(MarketsActions.streamReconnectScheduled),
       switchMap(({ attempt, delayMs }) =>
-        timer(delayMs).pipe(
-          map(() => MarketsActions.connectTickerStream({ attempt })),
-        ),
+        timer(delayMs).pipe(map(() => MarketsActions.connectTickerStream({ attempt }))),
       ),
     ),
   );

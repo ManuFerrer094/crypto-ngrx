@@ -21,8 +21,7 @@
   font-weight: 700;
 }
 
-.detail-page__notice,
-.detail-page__notes {
+.detail-page__notice {
   padding: 1.1rem 1.2rem;
   border: 1px solid rgba(13, 29, 52, 0.08);
   border-radius: 22px;
@@ -36,27 +35,9 @@
 }
 
 .detail-page__notice p,
-.detail-page__notes h3,
-.detail-page__notes ol {
+.detail-page__notice h3,
+.detail-page__notice ol {
   margin: 0;
-}
-
-.detail-page__notes {
-  display: grid;
-  gap: 0.8rem;
-}
-
-.detail-page__notes h3 {
-  font-size: 1.05rem;
-}
-
-.detail-page__notes ol {
-  padding-left: 1.2rem;
-  color: var(--color-text-muted);
-}
-
-.detail-page__notes li + li {
-  margin-top: 0.5rem;
 }
 
 @media (max-width: 700px) {

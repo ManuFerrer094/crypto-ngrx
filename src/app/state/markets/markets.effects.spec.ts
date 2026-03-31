@@ -4,6 +4,7 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { ReplaySubject, throwError, of, firstValueFrom, take, toArray } from 'rxjs';
 import { describe, beforeEach, expect, it, vi } from 'vitest';
 
+import { TRACKED_MARKET_WS_SYMBOLS } from '../../core/constants/tracked-markets';
 import { KrakenRestService } from '../../core/services/kraken-rest.service';
 import { KrakenWebsocketService } from '../../core/services/kraken-websocket.service';
 import { marketFixtures, rootStateFixture } from '../../testing/market-test-data';
@@ -15,11 +16,15 @@ describe('MarketsEffects', () => {
   let actions$: ReplaySubject<object>;
   let effects: MarketsEffects;
   let restService: { getMarketSnapshot: ReturnType<typeof vi.fn> };
+  let websocketService: { connect: ReturnType<typeof vi.fn> };
 
   beforeEach(() => {
     actions$ = new ReplaySubject(1);
     restService = {
       getMarketSnapshot: vi.fn(),
+    };
+    websocketService = {
+      connect: vi.fn(),
     };
 
     TestBed.configureTestingModule({
@@ -33,9 +38,7 @@ describe('MarketsEffects', () => {
         },
         {
           provide: KrakenWebsocketService,
-          useValue: {
-            connect: vi.fn(),
-          },
+          useValue: websocketService,
         },
       ],
     });
@@ -44,9 +47,7 @@ describe('MarketsEffects', () => {
   });
 
   it('boots the app by requesting the snapshot and resetting the selection', async () => {
-    const resultPromise = firstValueFrom(
-      effects.initializeApp$.pipe(take(2), toArray()),
-    );
+    const resultPromise = firstValueFrom(effects.initializeApp$.pipe(take(2), toArray()));
 
     actions$.next(AppActions.appEntered());
 
@@ -68,17 +69,14 @@ describe('MarketsEffects', () => {
   });
 
   it('maps REST failures to loadSnapshotFailure', async () => {
-    restService.getMarketSnapshot.mockReturnValue(
-      throwError(() => new Error('boom')),
-    );
+    restService.getMarketSnapshot.mockReturnValue(throwError(() => new Error('boom')));
     const resultPromise = firstValueFrom(effects.loadSnapshot$);
 
     actions$.next(MarketsActions.loadSnapshot());
 
     await expect(resultPromise).resolves.toEqual(
       MarketsActions.loadSnapshotFailure({
-        error:
-          'Could not load the Kraken REST snapshot. Check your connection and try again.',
+        error: 'Could not load the Kraken REST snapshot. Check your connection and try again.',
       }),
     );
   });
@@ -98,5 +96,15 @@ describe('MarketsEffects', () => {
         delayMs: 1000,
       }),
     );
+  });
+
+  it('subscribes the websocket stream with the full tracked market basket', async () => {
+    websocketService.connect.mockReturnValue(of({ type: 'connected' }));
+    const resultPromise = firstValueFrom(effects.connectTickerStream$);
+
+    actions$.next(MarketsActions.connectTickerStream({ attempt: 0 }));
+
+    await expect(resultPromise).resolves.toEqual(MarketsActions.streamConnected());
+    expect(websocketService.connect).toHaveBeenCalledWith(TRACKED_MARKET_WS_SYMBOLS);
   });
 });

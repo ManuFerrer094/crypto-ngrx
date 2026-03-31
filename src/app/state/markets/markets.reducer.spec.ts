@@ -36,6 +36,7 @@ describe('markets reducer', () => {
           high: 2250,
           last: 2200,
           low: 2100,
+          open: 2245,
           spread: 2,
           timestamp: '2026-03-30T12:15:00.000Z',
           volume: 5000,
@@ -58,10 +59,7 @@ describe('markets reducer', () => {
       connecting,
       MarketsActions.streamReconnectScheduled({ attempt: 2, delayMs: 2000 }),
     );
-    const connected = marketsFeature.reducer(
-      reconnecting,
-      MarketsActions.streamConnected(),
-    );
+    const connected = marketsFeature.reducer(reconnecting, MarketsActions.streamConnected());
 
     expect(connecting.connectionStatus).toBe('connecting');
     expect(reconnecting.connectionStatus).toBe('reconnecting');

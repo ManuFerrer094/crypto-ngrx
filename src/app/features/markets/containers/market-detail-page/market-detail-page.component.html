@@ -1,9 +1,7 @@
 @if (vm$ | async; as vm) {
   <section class="detail-page">
     <div class="detail-page__toolbar">
-      <button type="button" class="detail-page__back" (click)="goBack()">
-        Back to dashboard
-      </button>
+      <button type="button" class="detail-page__back" (click)="goBack()">Back to dashboard</button>
       <app-connection-status-badge
         [status]="vm.connectionStatus"
         [reconnectInMs]="vm.reconnectInMs"
@@ -17,20 +15,7 @@
     }
 
     @if (vm.market; as market) {
-      <app-market-detail-card
-        [market]="market"
-        (toggleFavorite)="toggleWatchlist($event)"
-      />
-
-      <section class="detail-page__notes">
-        <h3>How NgRx reaches this screen</h3>
-        <ol>
-          <li>The route slug becomes a symbol and dispatches <code>Select Symbol</code>.</li>
-          <li>The reducer stores the selected symbol in the markets feature state.</li>
-          <li>A selector builds a single view model for this page.</li>
-          <li>The component renders that selector output directly.</li>
-        </ol>
-      </section>
+      <app-market-detail-card [market]="market" (toggleFavorite)="toggleWatchlist($event)" />
     }
   </section>
 }

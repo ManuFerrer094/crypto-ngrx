@@ -48,6 +48,7 @@ function buildMarketPair({
       high: last + 100,
       last,
       low: last - 100,
+      open: last - change,
       spread: 0.4,
       timestamp: '2026-03-30T12:00:00.000Z',
       volume: 123456,
@@ -97,9 +98,7 @@ export const marketFixtures: MarketPair[] = [
 
 export const marketsStateFixture: MarketsState = {
   order: marketFixtures.map((market) => market.symbol),
-  entities: Object.fromEntries(
-    marketFixtures.map((market) => [market.symbol, market]),
-  ),
+  entities: Object.fromEntries(marketFixtures.map((market) => [market.symbol, market])),
   selectedSymbol: 'ETH/USD',
   loading: false,
   error: null,

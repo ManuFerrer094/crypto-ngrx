@@ -17,6 +17,11 @@
             <div>
               <p class="market-card__symbol">{{ market.symbol }}</p>
               <h3>{{ market.name }}</h3>
+              <div class="market-card__meta">
+                <span>{{ market.baseAsset }}/{{ market.quoteAsset }}</span>
+                <span>{{ market.statusLabel }}</span>
+                <span>{{ market.pairDecimals }} decimals</span>
+              </div>
             </div>
             <button
               type="button"
@@ -28,52 +33,76 @@
           </div>
 
           <div class="market-card__price">
-            <strong>
-              {{
-                market.last ?? 0
-                  | currency : market.quoteAsset : 'symbol' : '1.2-5'
-              }}
-            </strong>
-            <span
+            <div>
+              <strong>
+                {{ market.last ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}
+              </strong>
+              <p class="market-card__subprice">
+                Open {{ market.open ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}
+              </p>
+            </div>
+            <div
               class="market-card__change"
               [class.market-card__change--negative]="(market.change ?? 0) < 0"
             >
-              {{ market.changePctFraction ?? 0 | percent : '1.2-2' }}
-            </span>
+              <strong>{{ market.changePctFraction ?? 0 | percent: '1.2-2' }}</strong>
+              <span>
+                {{ market.change ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}
+              </span>
+            </div>
           </div>
 
           <dl class="market-card__stats">
             <div>
               <dt>Bid / Ask</dt>
               <dd>
-                {{ market.bid ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}
+                {{ market.bid ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}
                 /
-                {{ market.ask ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}
+                {{ market.ask ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}
+              </dd>
+            </div>
+            <div>
+              <dt>Spread</dt>
+              <dd>
+                {{ market.spread ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}
+                @if (market.spreadPct !== null) {
+                  <span> ({{ market.spreadPct / 100 | percent: '1.2-2' }}) </span>
+                }
+              </dd>
+            </div>
+            <div>
+              <dt>Bid size</dt>
+              <dd>{{ market.bidQuantity ?? 0 | number: '1.0-4' }} {{ market.baseAsset }}</dd>
+            </div>
+            <div>
+              <dt>Ask size</dt>
+              <dd>{{ market.askQuantity ?? 0 | number: '1.0-4' }} {{ market.baseAsset }}</dd>
+            </div>
+            <div>
+              <dt>24h volume</dt>
+              <dd>{{ market.volume ?? 0 | number: '1.0-0' }} {{ market.baseAsset }}</dd>
+            </div>
+            <div>
+              <dt>24h turnover</dt>
+              <dd>
+                {{ market.volumeNotional ?? 0 | currency: market.quoteAsset : 'symbol' : '1.0-0' }}
               </dd>
             </div>
             <div>
               <dt>24h range</dt>
               <dd>
-                {{ market.low ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}
+                {{ market.low ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}
                 -
-                {{ market.high ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}
+                {{ market.high ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}
               </dd>
             </div>
             <div>
-              <dt>24h volume</dt>
-              <dd>{{ market.volume ?? 0 | number : '1.0-0' }}</dd>
-            </div>
-            <div>
               <dt>Updated</dt>
-              <dd>{{ market.updatedAt | date : 'shortTime' }}</dd>
+              <dd>{{ market.updatedAt | date: 'shortTime' }}</dd>
             </div>
           </dl>
 
-          <button
-            type="button"
-            class="market-card__cta"
-            (click)="openDetail.emit(market.symbol)"
-          >
+          <button type="button" class="market-card__cta" (click)="openDetail.emit(market.symbol)">
             Open detail
           </button>
         </article>

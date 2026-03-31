@@ -3,12 +3,20 @@
     <div>
       <p class="detail-card__symbol">{{ market.symbol }}</p>
       <h2>{{ market.name }}</h2>
+      <div class="detail-card__meta">
+        <span>{{ market.baseAsset }}/{{ market.quoteAsset }}</span>
+        <span>{{ market.statusLabel }}</span>
+        <span>{{ market.pairDecimals }} decimals</span>
+      </div>
       <p class="detail-card__summary">
-        This screen reads the selected symbol from the store and renders a view
-        model built by selectors.
+        Live Kraken spot data with bid, ask, spread, turnover and 24h range in one view.
       </p>
     </div>
-    <button type="button" class="detail-card__favorite" (click)="toggleFavorite.emit(market.symbol)">
+    <button
+      type="button"
+      class="detail-card__favorite"
+      (click)="toggleFavorite.emit(market.symbol)"
+    >
       {{ market.isFavorite ? 'Saved to watchlist' : 'Save to watchlist' }}
     </button>
   </header>
@@ -17,50 +25,93 @@
     <div>
       <span class="detail-card__label">Last price</span>
       <strong>
-        {{ market.last ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}
+        {{ market.last ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}
       </strong>
+      <p>{{ market.midPrice ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }} mid</p>
     </div>
     <div
       class="detail-card__change"
       [class.detail-card__change--negative]="(market.change ?? 0) < 0"
     >
       <span>24h change</span>
-      <strong>{{ market.changePctFraction ?? 0 | percent : '1.2-2' }}</strong>
+      <strong>{{ market.changePctFraction ?? 0 | percent: '1.2-2' }}</strong>
+      <p>{{ market.change ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}</p>
+    </div>
+    <div class="detail-card__hero-stat">
+      <span class="detail-card__label">24h turnover</span>
+      <strong>
+        {{ market.volumeNotional ?? 0 | currency: market.quoteAsset : 'symbol' : '1.0-0' }}
+      </strong>
+      <p>{{ market.volume ?? 0 | number: '1.0-0' }} {{ market.baseAsset }} traded</p>
     </div>
   </div>
 
   <dl class="detail-card__stats">
     <div>
+      <dt>24h open</dt>
+      <dd>{{ market.open ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
+    </div>
+    <div>
       <dt>Bid</dt>
-      <dd>{{ market.bid ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
+      <dd>{{ market.bid ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
     </div>
     <div>
       <dt>Ask</dt>
-      <dd>{{ market.ask ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
+      <dd>{{ market.ask ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
+    </div>
+    <div>
+      <dt>Mid price</dt>
+      <dd>{{ market.midPrice ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
     </div>
     <div>
       <dt>Spread</dt>
-      <dd>{{ market.spread ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
+      <dd>{{ market.spread ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
+    </div>
+    <div>
+      <dt>Spread %</dt>
+      <dd>{{ (market.spreadPct ?? 0) / 100 | percent: '1.2-2' }}</dd>
     </div>
     <div>
       <dt>VWAP</dt>
-      <dd>{{ market.vwap ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
+      <dd>{{ market.vwap ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
     </div>
     <div>
       <dt>24h high</dt>
-      <dd>{{ market.high ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
+      <dd>{{ market.high ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
     </div>
     <div>
       <dt>24h low</dt>
-      <dd>{{ market.low ?? 0 | currency : market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
+      <dd>{{ market.low ?? 0 | currency: market.quoteAsset : 'symbol' : '1.2-5' }}</dd>
     </div>
     <div>
       <dt>24h volume</dt>
-      <dd>{{ market.volume ?? 0 | number : '1.0-0' }}</dd>
+      <dd>{{ market.volume ?? 0 | number: '1.0-0' }} {{ market.baseAsset }}</dd>
+    </div>
+    <div>
+      <dt>Bid size</dt>
+      <dd>{{ market.bidQuantity ?? 0 | number: '1.0-4' }} {{ market.baseAsset }}</dd>
+    </div>
+    <div>
+      <dt>Ask size</dt>
+      <dd>{{ market.askQuantity ?? 0 | number: '1.0-4' }} {{ market.baseAsset }}</dd>
+    </div>
+    <div>
+      <dt>24h turnover</dt>
+      <dd>
+        {{ market.volumeNotional ?? 0 | currency: market.quoteAsset : 'symbol' : '1.0-0' }}
+      </dd>
+    </div>
+    <div>
+      <dt>Pair status</dt>
+      <dd>{{ market.statusLabel }}</dd>
+    </div>
+    <div>
+      <dt>Price precision</dt>
+      <dd>{{ market.pairDecimals }} decimals</dd>
     </div>
     <div>
       <dt>Last update</dt>
-      <dd>{{ market.updatedAt | date : 'medium' }}</dd>
+      <dd>{{ market.updatedAt | date: 'medium' }}</dd>
     </div>
   </dl>
 </article>

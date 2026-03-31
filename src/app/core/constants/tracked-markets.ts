@@ -40,6 +40,56 @@ export const TRACKED_MARKETS: readonly TrackedMarketConfig[] = [
     restWsSymbol: 'SOL/USD',
     wsSymbol: 'SOL/USD',
   },
+  {
+    symbol: 'XRP/USD',
+    slug: 'xrp-usd',
+    name: 'XRP',
+    baseAsset: 'XRP',
+    quoteAsset: 'USD',
+    restSymbol: 'XRPUSD',
+    restWsSymbol: 'XRP/USD',
+    wsSymbol: 'XRP/USD',
+  },
+  {
+    symbol: 'ADA/USD',
+    slug: 'ada-usd',
+    name: 'Cardano',
+    baseAsset: 'ADA',
+    quoteAsset: 'USD',
+    restSymbol: 'ADAUSD',
+    restWsSymbol: 'ADA/USD',
+    wsSymbol: 'ADA/USD',
+  },
+  {
+    symbol: 'DOGE/USD',
+    slug: 'doge-usd',
+    name: 'Dogecoin',
+    baseAsset: 'DOGE',
+    quoteAsset: 'USD',
+    restSymbol: 'DOGEUSD',
+    restWsSymbol: 'DOGE/USD',
+    wsSymbol: 'DOGE/USD',
+  },
+  {
+    symbol: 'AVAX/USD',
+    slug: 'avax-usd',
+    name: 'Avalanche',
+    baseAsset: 'AVAX',
+    quoteAsset: 'USD',
+    restSymbol: 'AVAXUSD',
+    restWsSymbol: 'AVAX/USD',
+    wsSymbol: 'AVAX/USD',
+  },
+  {
+    symbol: 'LINK/USD',
+    slug: 'link-usd',
+    name: 'Chainlink',
+    baseAsset: 'LINK',
+    quoteAsset: 'USD',
+    restSymbol: 'LINKUSD',
+    restWsSymbol: 'LINK/USD',
+    wsSymbol: 'LINK/USD',
+  },
 ] as const;
 
 export const TRACKED_MARKETS_BY_SYMBOL = Object.fromEntries(
@@ -50,12 +100,8 @@ export const TRACKED_MARKETS_BY_SLUG = Object.fromEntries(
   TRACKED_MARKETS.map((market) => [market.slug, market]),
 ) as Record<string, TrackedMarketConfig>;
 
-export const TRACKED_MARKET_WS_SYMBOLS = TRACKED_MARKETS.map(
-  (market) => market.wsSymbol,
-);
+export const TRACKED_MARKET_WS_SYMBOLS = TRACKED_MARKETS.map((market) => market.wsSymbol);
 
-export const TRACKED_MARKET_REST_SYMBOLS = TRACKED_MARKETS.map(
-  (market) => market.restSymbol,
-);
+export const TRACKED_MARKET_REST_SYMBOLS = TRACKED_MARKETS.map((market) => market.restSymbol);
 
 export const WATCHLIST_STORAGE_KEY = 'ngrx-demo.watchlist';

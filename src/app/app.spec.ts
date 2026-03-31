@@ -10,10 +10,7 @@ describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [
-        provideRouter([]),
-        provideMockStore({ initialState: rootStateFixture }),
-      ],
+      providers: [provideRouter([]), provideMockStore({ initialState: rootStateFixture })],
     }).compileComponents();
   });
 
@@ -31,7 +28,7 @@ describe('App', () => {
 
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain(
-      'Learn NgRx from a small app that never sits still.',
+      'Realtime crypto markets with a sharper dashboard.',
     );
   });
 });
