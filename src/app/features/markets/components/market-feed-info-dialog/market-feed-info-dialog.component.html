@@ -1,0 +1,27 @@
+<mf-dialog
+  title="How the live board stays fresh"
+  message="The dashboard seeds tracked pairs from Kraken REST and then keeps price, spread and turnover updated from the live ticker stream."
+  [showClose]="true"
+  [showActions]="true"
+  ariaLabel="About the live market feed"
+  closeButtonLabel="Close live market feed information"
+  (mfClose)="close()"
+>
+  <div class="market-feed-dialog__body">
+    <p>
+      Use Reload snapshot when you want a fresh REST seed without waiting for the next stream tick.
+    </p>
+    <p>
+      Watchlist changes stay local in NgRx and are persisted in local storage for the next visit.
+    </p>
+  </div>
+
+  <div mfDialogActions>
+    <mf-button
+      label="Close"
+      variant="filled"
+      ariaLabel="Close live market feed information"
+      (mfClick)="close()"
+    />
+  </div>
+</mf-dialog>

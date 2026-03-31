@@ -1,7 +1,20 @@
 @if (vm$ | async; as vm) {
   <section class="detail-page">
     <div class="detail-page__toolbar">
-      <button type="button" class="detail-page__back" (click)="goBack()">Back to dashboard</button>
+      <div class="detail-page__nav">
+        <mf-breadcrumb
+          [items]="breadcrumbItems(vm.market?.symbol)"
+          ariaLabel="Market detail breadcrumb"
+          (mfItemClick)="handleBreadcrumbClick($event)"
+        />
+        <mf-button
+          label="Back to dashboard"
+          variant="text"
+          leadingIcon="arrow_back"
+          ariaLabel="Go back to the markets dashboard"
+          (mfClick)="goBack()"
+        />
+      </div>
       <app-connection-status-badge
         [status]="vm.connectionStatus"
         [reconnectInMs]="vm.reconnectInMs"
@@ -9,13 +22,17 @@
     </div>
 
     @if (vm.error) {
-      <section class="detail-page__notice">
-        <p>{{ vm.error }}</p>
-      </section>
+      <mf-alert title="Market feed issue" [message]="vm.error" severity="error" />
     }
 
     @if (vm.market; as market) {
       <app-market-detail-card [market]="market" (toggleFavorite)="toggleWatchlist($event)" />
+    } @else if (!vm.error) {
+      <mf-alert
+        title="Waiting for market data"
+        message="We are still resolving the selected market from the current snapshot."
+        severity="info"
+      />
     }
   </section>
 }

@@ -12,13 +12,18 @@
         Live Kraken spot data with bid, ask, spread, turnover and 24h range in one view.
       </p>
     </div>
-    <button
-      type="button"
-      class="detail-card__favorite"
-      (click)="toggleFavorite.emit(market.symbol)"
-    >
-      {{ market.isFavorite ? 'Saved to watchlist' : 'Save to watchlist' }}
-    </button>
+    <mf-button
+      class="detail-card__favorite-action"
+      [label]="market.isFavorite ? 'Saved to watchlist' : 'Save to watchlist'"
+      variant="outlined"
+      leadingIcon="bookmark"
+      [ariaLabel]="
+        market.isFavorite
+          ? 'Remove ' + market.symbol + ' from the watchlist'
+          : 'Save ' + market.symbol + ' to the watchlist'
+      "
+      (mfClick)="toggleFavorite.emit(market.symbol)"
+    />
   </header>
 
   <div class="detail-card__hero">

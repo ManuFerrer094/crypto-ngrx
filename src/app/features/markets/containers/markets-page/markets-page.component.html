@@ -15,11 +15,28 @@
           [status]="vm.connectionStatus"
           [reconnectInMs]="vm.reconnectInMs"
         />
-        <button type="button" class="page__reload" (click)="reloadSnapshot()">
-          Reload snapshot
-        </button>
+        <div class="page__action-group">
+          <mf-button
+            label="About live feed"
+            variant="outlined"
+            leadingIcon="info"
+            ariaLabel="Open information about the live market feed"
+            (mfClick)="openFeedInfo()"
+          />
+          <mf-button
+            label="Reload snapshot"
+            variant="filled"
+            leadingIcon="refresh"
+            ariaLabel="Reload the Kraken market snapshot"
+            (mfClick)="reloadSnapshot()"
+          />
+        </div>
       </div>
     </header>
+
+    @if (vm.loading) {
+      <mf-progress-bar mode="indeterminate" label="Loading market data" />
+    }
 
     <section class="stats-grid" aria-label="State summary">
       <article>
@@ -66,26 +83,55 @@
     </section>
 
     @if (vm.error) {
-      <section class="page__notice">
-        <p>{{ vm.error }}</p>
-      </section>
+      <mf-alert title="Market feed issue" [message]="vm.error" severity="error" />
     }
 
+    <mf-card
+      class="page__filters"
+      title="Board filters"
+      subtitle="Reactive forms powered by ng-comps ControlValueAccessor components."
+      variant="outlined"
+    >
+      <form class="page__filters-form" [formGroup]="filterForm">
+        <mf-input
+          formControlName="query"
+          label="Search markets"
+          placeholder="BTC, ETH, SOL or USD"
+          leadingIcon="search"
+          [fullWidth]="true"
+          ariaLabel="Search markets by symbol or asset"
+        />
+
+        <mf-slide-toggle
+          formControlName="favoritesOnly"
+          label="Show only watchlist markets in the main board"
+          ariaLabel="Show only watchlist markets in the main board"
+        />
+      </form>
+    </mf-card>
+
     <app-market-list
-      title="All tracked markets"
-      subtitle="A wider Kraken basket with live price, spread, size and turnover data."
-      [markets]="vm.markets"
+      [title]="vm.primaryTitle"
+      [subtitle]="vm.primarySubtitle"
+      [emptyMessage]="
+        vm.filters.favoritesOnly
+          ? 'Your watchlist does not match the current filter.'
+          : 'No tracked markets match the current filter.'
+      "
+      [markets]="vm.primaryMarkets"
       (openDetail)="openDetail($event)"
       (toggleFavorite)="toggleWatchlist($event)"
     />
 
-    <app-market-list
-      title="Watchlist"
-      subtitle="Keep your highest-conviction pairs close while the feed keeps updating."
-      emptyMessage="Save a market to pin it here and monitor it separately."
-      [markets]="vm.favoriteMarkets"
-      (openDetail)="openDetail($event)"
-      (toggleFavorite)="toggleWatchlist($event)"
-    />
+    @if (!vm.filters.favoritesOnly) {
+      <app-market-list
+        title="Watchlist"
+        subtitle="Keep your highest-conviction pairs close while the feed keeps updating."
+        emptyMessage="Save a market to pin it here and monitor it separately."
+        [markets]="vm.filteredFavoriteMarkets"
+        (openDetail)="openDetail($event)"
+        (toggleFavorite)="toggleWatchlist($event)"
+      />
+    }
   </section>
 }
